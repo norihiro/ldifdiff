@@ -1,5 +1,7 @@
 #! /bin/env python
 
+import base64
+
 class EOFException(Exception):
 	pass
 
@@ -16,7 +18,10 @@ def parse_line(line):
 		return (None, line[1:])
 	pos = line.find(':')
 	if pos:
-		return (line[:pos], line[pos:])
+            if line[pos+1] == ':':
+                return (line[:pos], "::"+base64.standard_b64decode(line[pos+2:]))
+            else:
+		        return (line[:pos], line[pos:])
 	else:
 		raise ValueError
 
