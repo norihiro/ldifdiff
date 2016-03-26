@@ -1,6 +1,7 @@
 #! /bin/env python
 
 import base64
+flag_binary=0
 
 class EOFException(Exception):
 	pass
@@ -18,8 +19,8 @@ def parse_line(line):
 		return (None, line[1:])
 	pos = line.find(':')
 	if pos:
-            if line[pos+1] == ':':
-                return (line[:pos], "::"+base64.standard_b64decode(line[pos+2:]))
+            if flag_binary and line[pos+1] == ':':
+                return (line[:pos], ": "+base64.standard_b64decode(line[pos+2:]))
             else:
 		        return (line[:pos], line[pos:])
 	else:
@@ -136,8 +137,21 @@ def compare(ldif1, ldif2, file):
 
 if __name__=='__main__':
 	import sys
-	f1 = sys.argv[1]
-	f2 = sys.argv[2]
+	i=1; n=0
+	while i < len(sys.argv):
+		ai = sys.argv[i]
+		i += 1
+		if ai=='-b':
+			flag_binary = 1
+		elif n==0:
+			f1 = ai
+			n += 1
+		elif n==1:
+			f2 = ai
+			n += 1
+		else:
+			sys.stderr.write('error: too many arguments: "%s"\n'%ai)
+			sys.exit(1)
 	ldif1 = read_ldif(open(f1))
 	ldif2 = read_ldif(open(f2))
 	compare(ldif1, ldif2, sys.stdout)

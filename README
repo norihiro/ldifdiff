@@ -1,11 +1,15 @@
 ldifdiff - compare two LDAP entries and output with a format of ldapmodify
 
 Synopsis:
-ldifdiff file1 file2
+ldifdiff [OPTION] file1 file2
 
 Description:
 The ldifdiff is a python program to compare two LDAP entries and generate a LDIF
 for ldapmodify to modify entries in file1 to entries in file2.
+
+Option:
+-b	Decode binary values if encoded by base64.
+	The output becomes human readable but ldapmodify might not be able to read.
 
 Examples:
 
